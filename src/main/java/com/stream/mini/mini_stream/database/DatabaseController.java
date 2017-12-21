@@ -2,19 +2,16 @@ package com.stream.mini.mini_stream.database;
 
 
 import com.stream.mini.mini_stream.requests.Form;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 
 @Component
 public class DatabaseController {
@@ -39,9 +36,14 @@ public class DatabaseController {
         return form.equals(store);
     }
 
-    public void signupUser(Form form){
+    public boolean signupUser(Form form){
         String query = "INSERT INTO user ( username, password  ) VALUES ( ?, ?);";
-        jdbcTemplate.update(query, new String[]{form.getUname(), hash(form.getPassword())});
+        try {
+            jdbcTemplate.update(query, new String[]{form.getUname(), hash(form.getPassword())});
+            return true;
+        } catch (DuplicateKeyException e) {
+            return false;
+        }
     }
 
     public String hash(String message) {
@@ -55,12 +57,10 @@ public class DatabaseController {
     }
 
     public  String bytesToHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        for ( int j = 0; j < bytes.length; j++ ) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        StringBuilder result = new StringBuilder();
+        for(byte b: bytes) {
+            result.append(String.format("%02x", b&0xFF));
         }
-        return new String(hexChars);
+        return result.toString();
     }
 }

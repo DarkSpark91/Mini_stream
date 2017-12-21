@@ -48,16 +48,20 @@ public class Application {
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public String signUpUser(Form form) {
-        signup(form);
-        return "redirect:/index";
+    public String signUpUser(Form form, Model model) {
+        if (signup(form)) {
+            return "redirect:/index";
+        }
+        model.addAttribute("message","User already exists");
+        return "signup";
+
     }
 
-    boolean validateLogin(Form form) {
+    private boolean validateLogin(Form form) {
         return db.validateLogin(form);
     }
 
-    void signup(Form form) {
-        db.signupUser(form);
+    private boolean signup(Form form) {
+        return db.signupUser(form);
     }
 }
