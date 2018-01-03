@@ -18,7 +18,10 @@ public class UserAccountsManager {
     @Autowired
     JdbcUserDetailsManager userService;
 
-    public void createUser(SignUpForm form) {
+    public void createUser(SignUpForm form) throws UserExistsException {
+        if(userService.userExists(form.getUname())) {
+            throw new UserExistsException();
+        }
         User user = new User(form.getUname(), passwordEncoder.encode(form.getPassword()), "user");
         userService.createUser(user);
         Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

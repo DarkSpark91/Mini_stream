@@ -22,9 +22,24 @@
     <div th:replace="fragments/signup">...</div>
 </div>
 
+<script>
+    loginTab();
+</script>
+
+<div th:if="${user_exists}">
+    <p>User already exists.</p>
+    <script>
+        signUpTab();
+    </script>
+
+</div>
+
+
 <form th:action="@{/logout}" method="post">
     <input type="submit" value="Sign Out"/>
 </form>
+
+
 
 <div th:if="${param.logout}">
     You have been logged out.
