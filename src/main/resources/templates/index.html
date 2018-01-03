@@ -3,10 +3,32 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <title>Hello World!</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" />
+    <script type="text/javascript"
+            th:src="@{/js/Main.js}"> </script>
 </head>
 <body>
-<h1>Hello world!</h1>
-<a href="/signup">sign up</a>
-<a href="/login">login</a>
+
+<div class="tabs">
+    <button onclick="loginTab()" >login</button>
+    <button onclick="signUpTab()" >sign up</button>
+</div>
+
+<div id="login">
+    <div th:replace="fragments/login">...</div>
+</div>
+
+<div id="signup">
+    <div th:replace="fragments/signup">...</div>
+</div>
+
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
+
+<div th:if="${param.logout}">
+    You have been logged out.
+</div>
+
 </body>
 </html>

@@ -1,6 +1,6 @@
-package com.stream.mini.mini_stream.requests;
+package com.stream.mini.mini_stream.dto;
 
-public class Form {
+public class SignUpForm {
     String uname;
     String password;
 
@@ -18,10 +18,5 @@ public class Form {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public boolean equals(Form other) {
-        return this.uname.equals(other.uname)
-                && this.password.equals(other.password);
     }
 }
